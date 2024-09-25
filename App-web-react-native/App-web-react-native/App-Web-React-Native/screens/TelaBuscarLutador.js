@@ -4,13 +4,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TelaBuscarLutador() {
-  const [piloto, setPiloto] = useState(null);  
+  const [lutador, setLutador] = useState(null);  
   const [searchQuery, setSearchQuery] = useState('');  
   const [loading, setLoading] = useState(false);  
   const [favoritos, setFavoritos] = useState([]);  
 
  
-  const buscarPiloto = async () => {
+  const buscarLutador = async () => {
     setLoading(true);
     try {
       const response = await axios.get('https://v1.mma.api-sports.io/fighters', {
@@ -23,12 +23,12 @@ export default function TelaBuscarLutador() {
       });
 
       if (response.data.response.length > 0) {
-        setPiloto(response.data.response[0]);  
+        setLutador(response.data.response[0]);  
       } else {
-        setPiloto(null);  
+        setLutador(null);  
       }
     } catch (error) {
-      console.error('Erro ao buscar pilotos:', error);
+      console.error('Erro ao buscar lutador:', error);
     } finally {
       setLoading(false);
     }
@@ -50,8 +50,8 @@ export default function TelaBuscarLutador() {
   }, []);
 
   
-  const adicionarFavorito = async (piloto) => {
-    const novosFavoritos = [...favoritos, piloto];
+  const adicionarFavorito = async (lutador) => {
+    const novosFavoritos = [...favoritos, lutador];
     setFavoritos(novosFavoritos);
     try {
       await AsyncStorage.setItem('favoritos', JSON.stringify(novosFavoritos));
@@ -69,43 +69,43 @@ export default function TelaBuscarLutador() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pesquisa de Pilotos</Text>
+      <Text style={styles.title}>Pesquisa de Lutador</Text>
 
       
       <TextInput
         style={styles.input}
-        placeholder="Digite o nome do piloto"
+        placeholder="Digite o nome do lutador"
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
       />
 
 
-      <Button title="Buscar" onPress={buscarPiloto} color="#007bff" />
+      <Button title="Buscar" onPress={buscarLutador} color="#007bff" />
 
      
       {loading ? <Text style={styles.loading}>Carregando...</Text> : null}
 
       
-      {piloto ? (
+      {lutador ? (
         <View style={styles.card}>
           <View style={styles.cardContent}>
             <View style={styles.textContainer}>
-              <Text style={styles.name}>{piloto.name}</Text>
+              <Text style={styles.name}>{lutador.name}</Text>
               <Text style={styles.teamText}>
-                Equipe: {piloto.teams && piloto.teams[0]?.team?.name || 'Desconhecida'}
+                Equipe: {lutador.teams && lutador.teams[0]?.team?.name || 'Desconhecida'}
               </Text>
-              <TouchableOpacity onPress={() => adicionarFavorito(piloto)} style={styles.button}>
+              <TouchableOpacity onPress={() => adicionarFavorito(lutador)} style={styles.button}>
                 <Text style={styles.buttonText}>Adicionar aos favoritos</Text>
               </TouchableOpacity>
             </View>
-            <Image source={{ uri: piloto.image }} style={styles.image} />
+            <Image source={{ uri: lutador.image }} style={styles.image} />
           </View>
         </View>
       ) : (
-        !loading && <Text style={styles.noResult}>Nenhum piloto encontrado.</Text>
+        !loading && <Text style={styles.noResult}>Nenhum lutador encontrado.</Text>
       )}
 
-      <Text style={styles.favoritosTitle}>Pilotos Favoritados:</Text>
+      <Text style={styles.favoritosTitle}>Lutador Favoritados:</Text>
       <FlatList
         data={favoritos}
         keyExtractor={(item) => item.id.toString()}
