@@ -13,9 +13,9 @@ export default function TelaBuscarLutador() {
   const buscarPiloto = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://v1.formula-1.api-sports.io/drivers', {
+      const response = await axios.get('https://v1.mma.api-sports.io/fighters', {
         headers: {
-          'x-apisports-key': 'ce5d352d10d3f1eea47de248b153832c',
+          'x-apisports-key': '90d70b1ba68db02e2c4560d674b34d05',
         },
         params: {
           name: searchQuery,
